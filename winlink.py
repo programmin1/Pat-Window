@@ -11,8 +11,6 @@ from gi.repository import Gtk
 from gi.repository import GObject
 from gi.repository import GLib
 from gi.repository import Pango
-import json
-from pandas import read_json
 
 class Listing:
     def __init__(self):
@@ -54,15 +52,56 @@ class Listing:
         row.add(hbox)
         listbox.add(row)
         
+    def getCall(self, default=''):
+        dialogWindow = Gtk.MessageDialog(self.dialog,
+                              Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                              Gtk.MessageType.QUESTION,
+                              Gtk.ButtonsType.OK_CANCEL,
+                              'What is your callsign?')
+
+        dialogBox = dialogWindow.get_content_area()
+        userEntry = Gtk.Entry()
+        userEntry.set_size_request(250,0)
+        dialogBox.pack_end(userEntry, False, False, 0)
+        dialogWindow.show_all()
+        response = dialogWindow.run()
+        text = userEntry.get_text() 
+        dialogWindow.destroy()
+        if response == Gtk.ResponseType.OK:
+            return text
+        else:
+            return None
+
+        
     def go(self, btn):
         """ Go button connects, opens browser Pat interface. """
+        axsetup = False
+        # Is axports set with winlink callsign?
+        for line in open('/etc/ax25/axports'):
+            if len(line.strip()) >0 and line.strip()[0] != '#' and line.find('wl2k')>-1:
+                axsetup = True
+        if not axsetup:
+            call = self.getCall()
+            os.system("echo '\nwl2k  "+call+"  1200  128  7 Winlink\n' | pkexec tee -a /etc/ax25/axports ")
+            self.setCallConfig(os.path.expanduser('~/.wl2k/config.json'), call)
+            self.setCallConfig(os.path.expanduser('~/.config/pat/config.json'), call)
+        
         gtklist = self.builder.get_object('list')
         path = gtklist.get_selected_row().path
         #config = read_json( (os.path.expanduser('~/.wl2k/config.json')) )
         #print(config)
-        os.system('gksudo kissattach '+path+' wl2k')
+        os.system('pkexec kissattach '+path+' wl2k')
         os.system("xdg-open 'http://localhost:8080'")
         os.system('pat http')
+        
+    def setCallConfig(self, config, call):
+        """ Set a Pat configure file """
+        output = ""
+        if os.path.exists(config):
+            for line in open(config,'r'):
+                output += line.replace('"mycall": ""', '"mycall": "'+call+'"')
+            with open(config, 'w') as outfile:
+                outfile.write(output)
         
     def stop(self, btn):
         """ Stop and quit """
