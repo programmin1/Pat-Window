@@ -1,0 +1,4 @@
+src/* usr/share/pat-window
+PatWinlink.desktop   usr/share/applications
+patwindow /usr/bin
+src/icon.svg   usr/share/icons/hicolor/scalable/apps/

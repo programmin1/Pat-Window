@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 #  A Winlink User interface
@@ -11,6 +11,7 @@ from gi.repository import Gtk
 from gi.repository import GObject
 from gi.repository import GLib
 from gi.repository import Pango
+from gi.repository import GdkPixbuf
 
 class Listing:
     def __init__(self):
@@ -23,6 +24,11 @@ class Listing:
         self.builder.connect_signals(self)
         self.dialog = self.builder.get_object('MainDialog')
         self.dialog.set_default_size(300,300)
+        self.dialog.set_title("Connect AX25 Pat Winlink")
+        if os.path.exists('icon.svg'):
+            icon_app_path = 'icon.svg'
+            pixbuf = GdkPixbuf.Pixbuf.new_from_file(icon_app_path)
+            self.dialog.set_icon(pixbuf)
         self.refresh(None)
         self.dialog.show_all()
         

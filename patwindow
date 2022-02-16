@@ -1,0 +1,4 @@
+#!/bin/bash
+#Starts up pat window
+cd /usr/share/pat-window/
+./winlink.py $@

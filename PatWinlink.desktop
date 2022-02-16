@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Icon=icon.svg
+Encoding=UTF-8
+Name=Pat-Winlink-Window
+Comment=Pat-Winlink-Window
+Exec=patwindow
+Terminal=false
+Categories=Education;Science;GTK;GNOME;Utility;
