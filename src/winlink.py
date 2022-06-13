@@ -98,7 +98,12 @@ class Listing:
         #print(config)
         os.system('pkexec kissattach '+path+' wl2k')
         os.system("xdg-open 'http://localhost:8080'")
-        os.system('pat http')
+        if os.system('pat env') != 0:
+            os.system("xdg-open 'https://github.com/la5nta/pat/releases'")
+            print('Pat must be installed first! pat-winlink in Ubuntu 22.04 does not have AX25 support built in.')
+        else:
+            #Working install.
+            os.system('pat http')
         
     def setCallConfig(self, config, call):
         """ Set a Pat configure file """

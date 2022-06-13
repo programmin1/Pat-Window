@@ -7,3 +7,4 @@ Comment=Pat-Winlink-Window
 Exec=patwindow
 Terminal=false
 Categories=Education;Science;GTK;GNOME;Utility;
+X-Purism-FormFactor=Workstation;Mobile;
